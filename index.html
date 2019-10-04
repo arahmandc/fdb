@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <title>DashBoard</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin="">
+    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==" crossorigin=""></script>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css">
+    <link rel="stylesheet" href="https://rawgit.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+     <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+
+    <!--  <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/blueimp-gallery.min.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
+ -->
+    <!-- Custom Fonts-->
+    <!-- <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css"> -->
+
+
+      <meta charset="utf-8">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+  <script src="https://d3js.org/d3.v3.min.js"></script>
+  <script src="https://d3js.org/topojson.v1.min.js"></script>
+  <script src="https://d3js.org/d3-tile.v0.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/leaflet.esri/1.0.4/esri-leaflet.js"></script>
+<style>
+@font-face {
+    font-family: "Arial MT Std";
+    src: url(https://gfw2-data.s3.amazonaws.com/fires/d3/Dashboard/ArialMTStd-LightCond.otf) format("opentype");
+    font-weight: normal;
+}
+@font-face {
+    font-family: "Arial MT Std";
+    src: url(https://gfw2-data.s3.amazonaws.com/fires/d3/Dashboard/ArialMTStd-BoldCond.otf) format("opentype");
+    font-weight: bold;
+}
+body {
+  font-family: "Arial MT Std", Helvetica, sans-serif, Arial;
+  position: relative;
+}
+h1{
+  color: #424242;
+  font-size: 18px;
+  margin: 5px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+h2{
+  color: #424242;
+  font-size: 16px;
+  margin: 0px;
+  text-align: center;
+  font-weight: bolder;
+}
+h3{
+  display: block;
+  font-size: 16px;
+  margin: 15px;
+  font-weight: normal;
+}
+h4{
+  display: block;
+  margin: 0px;
+  text-align: center;
+  font-weight: normal;
+  font-size: 14px;
+}
+
+.background {
+  fill: none;
+  pointer-events: all;
+}
+.mesh {
+  fill: none;
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: darkgray;
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.axis text {
+  font-size: 11px;
+}
+#info{
+  z-index: 1;
+  position:relative;
+/*  width:200px;*/
+  height:80px;
+  padding:10px;
+  background-color:transparent;
+  border-radius:10px;
+  margin-left: 10px;
+  /*box-shadow: 4px 4px 10px rgba(0,0,0,0.1);*/
+}
+#info2 {
+  z-index: 1;
+/*   position:relative;*/
+/*  width: 100px;*/
+  overflow: hidden;
+  float: left;
+}
+#info2 h2 {
+  font-size: 24px;
+  text-align: right;
+  margin-top: 5px;
+}
+
+#info3 {
+  width: 110px;
+  overflow: hidden;
+}
+#info3 h2 {
+}
+#info.hidden{
+  display:none;
+}
+#info p{
+  margin:0px;
+  font-size:12px;
+}
+
+#chartDiv rect{
+  fill:#D68178;
+}
+#chartDiv rect.selected{
+  fill:darkred;
+}
+#chartDiv svg {
+}
+
+#barChart, #pieDiv1, #pieDiv2 {
+}
+
+#map {
+  width: 350px;
+  height: 350px;
+  border: 1px dashed darkgray;
+}
+
+#pieDiv1 path {
+  stroke: #fff;
+}
+#pieDiv1 text {
+  font-size: 10px;
+  fill:white;
+}
+#pieDiv2 path {
+  stroke: #fff;
+}
+#pieDiv2 text {
+  font-size: 10px;
+  fill:white;
+}
+#barChart text {
+  font-size: 10px;
+  fill:black;
+}
+#dashboard{
+  overflow: hidden;
+  margin: auto;
+  width: 800px;
+}
+#left{
+  width: 550px;
+  float: left;
+}
+#right{
+  overflow: hidden;
+  width: 250px;
+}
+#right svg {
+  display: block;
+  margin: auto;
+}
+
+
+
+  </style>
+
+</head>
+<body>
+
+  <div style="margin-top: 20px"><h1>Health Facilities Field data Collection</h1></div>
+<div style=""><h2>DashBoard</h2></div>
+<hr>
+
+
+
+<div id="dashboard">
+  <div id="left">
+      <br>
+    <h3>Chart View</h3>
+    <div id="chartDiv"> 
+      <iframe width="541.1566626704833" height="278.27985632183913" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vS0FHqUqE53mC00Klh6wEtPUAaTHo3U-RSXmW-0xrwjlNF5iZaHEo1Zitmf38DTsxv2ZIUd9QJ8pUym/pubchart?oid=1796152904&amp;format=interactive"></iframe>
+    </div>
+    <hr>
+    <h3>Objective</h3>
+    <div ></div>
+    <hr>
+    <h3>Map View</h3>
+    <div id="map"></div>
+    <h3>Table View</h3>
+    <iframe src="table.html" style="width: 100%; height: 500px" name="internal" frameborder="0"></iframe>
+   
+</div>
+
+  <div id="right">
+    <div id="info">
+      <h1 id="place">Dhaka City</h1>
+      <h2 id="number" style="text-align: center;">Year 2019<h2>
+        <h4 id="year" style="text-align: center;">Total Data</h4>
+    </div>
+    <div>
+      <iframe src="table2.html" style="width: 100%; height: 500px" name="internal" frameborder="0"></iframe>
+    </div>
+    
+    <div id="pieDiv1">
+      <h4> <span style="color:#1B5E48; font-weight:bold;">
+        
+
+      </span></h4>
+    </div>
+    <div id="pieDiv2">
+      <h2 id="number" style="text-align: center;">Pie Chart<h2>
+      <h4> <span style="color:#1B455E; font-weight:bold;">
+        <iframe width="211.80997304582206" height="219.725" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vS0FHqUqE53mC00Klh6wEtPUAaTHo3U-RSXmW-0xrwjlNF5iZaHEo1Zitmf38DTsxv2ZIUd9QJ8pUym/pubchart?oid=2038363474&amp;format=interactive"></iframe>
+      </span></h4>
+    </div>
+    <div id="barChart">
+      <h4></h4>
+    </div>
+  </div>
+</div>
+<div style="height: 100px" align="center">
+  <h5>All Data Collected By...</h5>
+  <!-- <a href="http://osm.org/" target="_blank"><img src="osm_logo.svg" width="" height="80px"/></a><a href="https://www.hotosm.org/" target="_blank"><img src="Hot_logo.svg" width="" height="80px"/></a>  -->
+  <a href="http://boiledbhoot.org/" target="_blank"><img src="logo.svg" width="" height="80px"/></a> 
+</div>
+<div style="margin-top: 10px"  "margin-bottom: 20px" align="right">DashBoard Created by <a href="https://arahmandc.github.io/" target="_blank">Atikur Rahman</a></div>
+<!-- <div style="margin-top: 20px" align="center">Copyright © 2019 <a href="https://arahmandc.github.io/" target="_blank">Atikur Rahman</a></div> -->
+
+
+
+<script type="text/javascript">
+
+/*
+* Script to display two tables from Google Sheets as point and polygon layers using Leaflet
+* Starts by importing JSONs representing the data to provide faster loading (and in case Google changes their API)
+* The Sheets are then imported using Tabletop.js and overwrite the initially laded layers
+*/
+
+// The two getJSON calls load the localy stored JSONs and call the appropriate functions
+// $.getJSON("/leaflet-gsheets/data-sources/US-states-leaflet.json", function(json) {
+//     addPolygons(json);
+// });
+
+// $.getJSON("/leaflet-gsheets/data-sources/US-points.json", function(json) {
+//     addPoints(json);
+// });
+
+// init() is called as soon as the page loads
+function init() {
+
+    // these URLs come from Google Sheets "shareable link" form
+    // the first is the polygon layer and the second the points
+  var polyURL = "https://docs.google.com/spreadsheets/d/1cd2RKuaKX3yoh4-kPxmUGdzIut_QzNEnSM3uXHiDs6E/edit?usp=sharing";
+  var pointsURL = "https://docs.google.com/spreadsheets/d/1kjJVPF0LyaiaDYF8z_x23UulGciGtBALQ1a1pK0coRM/edit?usp=sharing";
+
+    Tabletop.init( { key: pointsURL,
+                     callback: addPoints,
+                     simpleSheet: true } );  // simpleSheet assumes there is only one table and automatically sends its data
+    Tabletop.init( { key: polyURL,
+                     callback: addPolygons,
+                     simpleSheet: true } );
+}
+window.addEventListener("DOMContentLoaded", init);
+
+// Create a new Leaflet map centered on the continental US
+
+// Dhaka 12/23.8054/90.4340
+
+// 11/23.7866/90.2987
+var map = L.map("map").setView([23.7816, 90.4154], 11);
+
+// This is the Carto Positron basemap
+var basemap = L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}{r}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://cartodb.com/attributions">CartoDB</a>',
+    subdomains: "abcd",
+    maxZoom: 19
+});
+basemap.addTo(map);
+
+// These are declared outisde the functions so that the functions can check if they already exist
+var polygonLayer;
+var pointGroupLayer;
+
+// The form of data must be a JSON representation of a table as returned by Tabletop.js
+// addPolygons first checks if the map layer has already been assigned, and if so, deletes it and makes a fresh one
+// The assumption is that the locally stored JSONs will load before Tabletop.js can pull the external data from Google Sheets
+function addPolygons(data) {
+    if (polygonLayer != null) {
+        // If the layer exists, remove it and continue to make a new one with data
+        polygonLayer.remove()
+    }
+
+    // Need to convert the Tabletop.js JSON into a GeoJSON
+    // Start with an empty GeoJSON of type FeatureCollection
+    // All the rows will be inserted into a single GeoJSON
+    var geojsonStates = {
+        "type": "FeatureCollection",
+        "features": []
+    };
+
+    for (var row in data) {
+        // The Sheets data has a column "include" that specifies if that row should be mapped
+        if (data[row].include == "y") {
+            var coords = JSON.parse(data[row].geometry);
+
+            geojsonStates.features.push({
+                "type": "Feature",
+                "geometry": {
+                    "type": "MultiPolygon",
+                    "coordinates": coords
+                },
+                "properties": {
+                    "name": data[row].name,
+                    "summary": data[row].summary,
+                    "state": data[row].state,
+                    "local": data[row].local,
+                }
+            });
+        }
+    }
+
+    // The polygons are styled slightly differently on mouse hovers
+    var poylgonStyle = {"color": "#2ca25f", "fillColor": "#99d8c9", "weight": 1.5};
+    var polygonHoverStyle = {"color": "green", "fillColor": "#2ca25f", "weight": 3};
+
+    polygonLayer = L.geoJSON(geojsonStates, {
+        onEachFeature: function (feature, layer) {
+            layer.bindPopup("<h2>"+feature.properties.name+"</h2><p>"+feature.properties.summary+"</p>");
+            layer.on({
+                mouseout: function(e) {
+                    e.target.setStyle(poylgonStyle);
+                },
+                mouseover: function(e) {
+                    e.target.setStyle(polygonHoverStyle);
+                },
+                click: function(e) {
+                    // This zooms the map to the clicked polygon
+                    // Not always desirable
+                    // map.fitBounds(e.target.getBounds());
+                }
+            });
+        },
+        style: poylgonStyle
+    }).addTo(map);
+}
+
+// addPoints is a bit simpler, as no GeoJSON is needed for the points
+// It does the same check to overwrite the existing points layer once the Google Sheets data comes along
+function addPoints(data) {
+    if (pointGroupLayer != null) {
+        pointGroupLayer.remove();
+    }
+    pointGroupLayer = L.layerGroup().addTo(map);
+
+    for(var row = 0; row < data.length; row++) {
+        var marker = L.marker([data[row].lat, data[row].long]).addTo(pointGroupLayer);
+        marker.bindPopup("<h2>"+data[row].location+"</h2>There's a "+data[row].level+" "+data[row].category+" here");
+
+        // AwesomeMarkers is used to create fancier icons
+        var icon = L.AwesomeMarkers.icon({
+            icon: "info-sign",
+            iconColor: "white",
+            markerColor: getColor(data[row].category),
+            prefix: "glyphicon",
+            extraClasses: "fa-rotate-0"
+        });
+        marker.setIcon(icon);
+
+    }
+}
+
+// Returns different colors depending on the string passed
+// Used for the points layer
+
+function getColor(type) {
+    switch (type) {
+        case "Coffee Shop":
+            return "green";
+        case "Restaurant":
+            return "blue";
+        default:
+            return "green";
+
+    }
+}
+</script>
+
+
+</body>
+</html>

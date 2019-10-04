@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+   <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+
+        <style>
+        ul {
+            margin-left:300px;
+             list-style-type: none;
+             margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            }
+
+        li {
+            float: left;
+            }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            }
+
+        li a:hover {
+            text-decoration: none;
+        background-color: #111;
+        color: red;
+        }
+
+
+
+
+#customers {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 4px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  text-align: center;
+  background-color: #2ca25f;
+  color: white;
+}
+    </style>
+</head>
+<body>
+        
+       <div style="text-align: right;padding-right: 30px "><a href="#" id="test" onClick="javascript:fnExcelReport();" style="text-decoration: none;" "text-align: center;">Export Excel</a></div>
+
+    <!-- partial:index.partial.html -->
+    <table id="customers">
+    <tr>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Total Data</th>
+    </tr>
+    </table>
+    
+
+
+    <!-- partial -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.4.2/tabletop.min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
+    <script  src="./script.js"></script>
+
+    <script type="text/javascript">
+        
+    function fnExcelReport() {
+    var tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+    tab_text = tab_text + '<head><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';
+
+    tab_text = tab_text + '<x:Name>Sheet1</x:Name>';
+
+    tab_text = tab_text + '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
+    tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
+
+    tab_text = tab_text + "<table border='1px'>";
+    tab_text = tab_text + $('#customers').html();
+    tab_text = tab_text + '</table></body></html>';
+
+    var data_type = 'data:application/vnd.ms-excel';
+    
+    var ua = window.navigator.userAgent;
+    var msie = ua.indexOf("MSIE ");
+    
+    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+        if (window.navigator.msSaveBlob) {
+            var blob = new Blob([tab_text], {
+                type: "application/csv;charset=utf-8;"
+            });
+            navigator.msSaveBlob(blob, 'Data Table.xls');
+        }
+    } else {
+        $('#test').attr('href', data_type + ', ' + encodeURIComponent(tab_text));
+        $('#test').attr('download', 'Data Table.xls');
+    }
+
+}
+
+    </script>
+</body>
+</html>
