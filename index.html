@@ -39,6 +39,9 @@
   <script src="https://d3js.org/topojson.v1.min.js"></script>
   <script src="https://d3js.org/d3-tile.v0.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/leaflet.esri/1.0.4/esri-leaflet.js"></script>
+
+
+
 <style>
 @font-face {
     font-family: "Arial MT Std";
@@ -104,9 +107,10 @@ h4{
   font-size: 11px;
 }
 #info{
-  z-index: 1;
-  position:relative;
+  /*z-index: 1;*/
+/*  position:relative;*/
 /*  width:200px;*/
+  text-align-last: center;
   height:80px;
   padding:10px;
   background-color:transparent;
@@ -154,8 +158,8 @@ h4{
 }
 
 #map {
-  width: 350px;
-  height: 350px;
+  width: 300px;
+  height: 400px;
   border: 1px dashed darkgray;
 }
 
@@ -180,15 +184,15 @@ h4{
 #dashboard{
   overflow: hidden;
   margin: auto;
-  width: 800px;
+  width: 1010px;
 }
 #left{
-  width: 550px;
+  width: 700px;
   float: left;
 }
 #right{
   overflow: hidden;
-  width: 250px;
+  width: 300px;
 }
 #right svg {
   display: block;
@@ -215,9 +219,141 @@ h4{
   color: white;
 }
 
-
-
   </style>
+
+<style>
+* {box-sizing: border-box;}
+
+.img-comp-container {
+  position: relative;
+  align-items: center;
+  height: 200px; /*should be the same height as the images*/
+}
+
+.img-comp-img {
+  position: absolute;
+  width: auto;
+  height: auto;
+  overflow:hidden;
+}
+
+.img-comp-img img {
+  display:block;
+  vertical-align:middle;
+}
+
+.img-comp-slider {
+  position: absolute;
+  z-index:9;
+  cursor: ew-resize;
+  /*set the appearance of the slider:*/
+  width: 40px;
+  height: 40px;
+  background-color: #2196F3;
+  opacity: 0.7;
+  border-radius: 50%;
+}
+</style>
+
+<style>
+divv {
+  padding: 5px;
+}
+
+.img1 {
+  float: right;
+}
+
+.clearfix {
+  overflow: auto;
+}
+
+.img2 {
+  float: left;
+  padding-right: 5px;
+}
+</style>
+
+<script>
+function initComparisons() {
+  var x, i;
+  /*find all elements with an "overlay" class:*/
+  x = document.getElementsByClassName("img-comp-overlay");
+  for (i = 0; i < x.length; i++) {
+    /*once for each "overlay" element:
+    pass the "overlay" element as a parameter when executing the compareImages function:*/
+    compareImages(x[i]);
+  }
+  function compareImages(img) {
+    var slider, img, clicked = 0, w, h;
+    /*get the width and height of the img element*/
+    w = img.offsetWidth;
+    h = img.offsetHeight;
+    /*set the width of the img element to 50%:*/
+    img.style.width = (w / 2) + "px";
+    /*create slider:*/
+    slider = document.createElement("DIV");
+    slider.setAttribute("class", "img-comp-slider");
+    /*insert slider*/
+    img.parentElement.insertBefore(slider, img);
+    /*position the slider in the middle:*/
+    slider.style.top = (h / 2) - (slider.offsetHeight / 2) + "px";
+    slider.style.left = (w / 2) - (slider.offsetWidth / 2) + "px";
+    /*execute a function when the mouse button is pressed:*/
+    slider.addEventListener("mousedown", slideReady);
+    /*and another function when the mouse button is released:*/
+    window.addEventListener("mouseup", slideFinish);
+    /*or touched (for touch screens:*/
+    slider.addEventListener("touchstart", slideReady);
+    /*and released (for touch screens:*/
+    window.addEventListener("touchstop", slideFinish);
+    function slideReady(e) {
+      /*prevent any other actions that may occur when moving over the image:*/
+      e.preventDefault();
+      /*the slider is now clicked and ready to move:*/
+      clicked = 1;
+      /*execute a function when the slider is moved:*/
+      window.addEventListener("mousemove", slideMove);
+      window.addEventListener("touchmove", slideMove);
+    }
+    function slideFinish() {
+      /*the slider is no longer clicked:*/
+      clicked = 0;
+    }
+    function slideMove(e) {
+      var pos;
+      /*if the slider is no longer clicked, exit this function:*/
+      if (clicked == 0) return false;
+      /*get the cursor's x position:*/
+      pos = getCursorPos(e)
+      /*prevent the slider from being positioned outside the image:*/
+      if (pos < 0) pos = 0;
+      if (pos > w) pos = w;
+      /*execute a function that will resize the overlay image according to the cursor:*/
+      slide(pos);
+    }
+    function getCursorPos(e) {
+      var a, x = 0;
+      e = e || window.event;
+      /*get the x positions of the image:*/
+      a = img.getBoundingClientRect();
+      /*calculate the cursor's x coordinate, relative to the image:*/
+      x = e.pageX - a.left;
+      /*consider any page scrolling:*/
+      x = x - window.pageXOffset;
+      return x;
+    }
+    function slide(x) {
+      /*resize the image:*/
+      img.style.width = x + "px";
+      /*position the slider:*/
+      slider.style.left = img.offsetWidth - (slider.offsetWidth / 2) + "px";
+    }
+  }
+}
+</script>
+
+
 
 </head>
 <body>
@@ -231,90 +367,149 @@ h4{
 <div id="dashboard">
   <div id="left">
       <br>
-    <h3>Chart View</h3>
-    <div id="chartDiv"> 
-      <iframe width="541.1566626704833" height="278.27985632183913" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vS0FHqUqE53mC00Klh6wEtPUAaTHo3U-RSXmW-0xrwjlNF5iZaHEo1Zitmf38DTsxv2ZIUd9QJ8pUym/pubchart?oid=1796152904&amp;format=interactive"></iframe>
-    </div>
-    <hr>
     <h3>Objective</h3>
-    <div ></div>
-    <hr>
+    <div >
+
+      <h2 style="color: red">all text and image are not related with dashboad and those are collected from internet</h2>
+      Large segments of the population in developing countries are
+    deprived of a fundamental right: access to basic health care.
+    Without an appropriate and adequate health support and
+    delivery system in place, its adverse effects will be felt in all
+    other sectors of the economy. In simple terms, an ailing nation
+    equates to an ailing economy as manifested in lower incomeearning capacity of households and significant productivity
+    losses in those sectors that sustain the economy.
+    The problem of access to health care is particularly acute in
+    Bangladesh. According to a World Bank (1987) estimate,
+    ‘only 30% of the population has access to primary health services and overall health care performance remains unacceptably low by all conventional measurements.’ A subsequent
+    study (Sen and Acharya 1997) notes some improvements but
+    indicates that ‘the poor quality of health services . . . are persistent concerns.’ The poor performance of the health care
+    sector was attributed to the following: critical staff are absent,
+    essential supplies are generally unavailable, facilities are
+    inadequate, and the quality of staffing is poor. The problems
+    of supervision and accountability exacerbate the problems;
+    and if corrupt practices are added to the list, it is not difficult
+    to imagine the predicament of the patients. In fact, these conditions and a general perception of poor and unreliable services may explain why those who can afford it have been
+    seeking health care services in other countries. In a country
+    where the population growth rate will place additional
+    demands on the health sector, its preparedness to serve its
+    constituencies effectively is particularly troubling as the
+    future begins to catch up.
+        <di class="clearfix">
+  <img class="img2" src="https://arahmandc.github.io/img/blogs/post/landing.png" alt="Pineapple" width="400" height="250">
+<!--  <p style="text-align: justify"> -->
+   
+    To address the impending problems, consideration has been
+    given to the privatization alternative. Thus, the Medical Practice and Private Clinics and Laboratories Ordinance was promulgated in 1982 to encourage the growth of private
+    health-care service delivery. By June 1996, a total of 346
+    private hospitals and clinics with more than 5500 beds were
+    registered with the Directorate of Hospitals and Clinics. Of
+    this total, 142 were established in Dhaka alone with a capacity of 2428 beds (Khan 1996). Additional considerations are
+    seen in the proportion of GDP allocated to the health care
+    sector: it was more than doubled between 1985/86 and
+    1994/95, from 0.6 to 1.3% (Kawnine et al. 1995). A significant
+    proportion of this allocation was earmarked for primary
+    health care.
+    While these allocations are encouraging, the perceptions that
+    people have about the relative quality of health care services
+    in the country may not be so favourable and remains to be
+    assessed. This assessment is important because even if the
+    problems of access were to be substantially alleviated, quality
+    factors are likely to strongly influence patients’ choice of hospitals. In Nepal, for example, the Government made substantial investments in basic health care; yet utilization remained
+    low because of clients’ negative perceptions of public health
+    care (Lafond 1995). In Vietnam, poor service in the public
+    sector led to increased use of private providers (Guldners and
+    Rifkin 1993). Apparently, quality is important and demands
+    continuous attention.
+    With the growth of private health care facilities, especially in
+    Dhaka city, it is important to assess the quality of services
+    delivered by these establishments. In particular, it is important to determine how the quality of services provided by
+    private clinics and hospitals compares to that of public hospitals. If quality issues are being compromised by these
+    establishments, it calls for the re-evaluation of policy
+    measures to redefine their role, growth and coverage, and to
+    seek appropriate interventions to ensure that these institutions are more quality-focused and better able to meet the
+    needs of their patients. A search of the literature suggests
+    that such a comparative study has not been undertaken.
+    While anecdotal evidence suggests the existence of serious
+    service-related problems in both sectors, this study was
+<!--   </p>  -->
+
+
+    </div>
+
+  
+    <h3>Chart View</h3>
+
+        <!-- <img src="logof.jpg" alt="logof" width="160" height="160" float="left"> -->
+
+        <iframe width="519" float="right" height="230" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1Rovoh3n0pR8BZPNJ21bZf98mc8LOJlSSiW2viyuGgsT_MFvin64vvN-Gs4JWIu4qMAq00ipCFBQq/pubchart?oid=2119435433&amp;format=interactive"></iframe>
+
+    
+       <!--  map -->
     <h3>Map View</h3>
     <div id="map"></div>
-<!--     <h3>Table View</h3>
-    <iframe src="table.html" style="width: 100%; height: 500px" name="internal" frameborder="0"></iframe> -->
-   
+    <h3>Per Person Data</h3>
+
+    <!-- table 2 -->
+   <!--  <iframe width="240" height="243"src="https://docs.google.com/spreadsheets/d/10WZkK0NEw77FHICRADyN8O5ej1AqPQHm2RJ6eHPT-AE/pubhtml/sheet?headers=false&amp;gid=1953632142&amp;range=b100:c110"></iframe> -->
+
+
+    <!-- per person Chart -->
+   <iframe width="454" height="230" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1Rovoh3n0pR8BZPNJ21bZf98mc8LOJlSSiW2viyuGgsT_MFvin64vvN-Gs4JWIu4qMAq00ipCFBQq/pubchart?oid=77751107&amp;format=interactive"></iframe>
+
+    
+
 </div>
 
   <div id="right">
-    <div id="info">
       <h1 id="place">Dhaka City</h1>
-      <h2 id="number" style="text-align: center;">Year 2019<h2>
-        <h4 id="year" style="text-align: center;">Total Data</h4>
-    </div>
-    <div>
-        <!-- partial:index.partial.html -->
-    <table id="customers">
-    <tr>
-        <th>POI</th>
-        <th>Total Data</th>
-    </tr>
-    </table>
-    
+      <h2 id="number">Year 2019<h2>
+
+    <!-- table 1 -->
+
+    <iframe width="240" height="280" src="https://docs.google.com/spreadsheets/d/10WZkK0NEw77FHICRADyN8O5ej1AqPQHm2RJ6eHPT-AE/pubhtml/sheet?headers=false&amp;gid=1953632142&amp;range=b112:c123"></iframe>
+     
+     <!-- counters -->
 
 
-    <!-- partial -->
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.4.2/tabletop.min.js'></script>
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
-    <script  src="./script2.js"></script>
-<!--       <iframe src="table2.html" style="width: 100%; height: 500px" name="internal" frameborder="0"></iframe> -->
-    </div>
-    
-    <div id="pieDiv1">
-      <h4> <span style="color:#1B5E48; font-weight:bold;">
-        
 
-      </span></h4>
-    </div>
-    <div id="pieDiv2">
-      <h2 id="number" style="text-align: center;">Pie Chart<h2>
-      <h4> <span style="color:#1B455E; font-weight:bold;">
-        <iframe width="211.80997304582206" height="219.725" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vS0FHqUqE53mC00Klh6wEtPUAaTHo3U-RSXmW-0xrwjlNF5iZaHEo1Zitmf38DTsxv2ZIUd9QJ8pUym/pubchart?oid=2038363474&amp;format=interactive"></iframe>
-      </span></h4>
-    </div>
-    <div id="barChart">
-      <h4></h4>
-    </div>
-  </div>
 </div>
+
+</div>
+
+
+<!-- <div style="height: 750px" align="center">
+  <h1>Compare The Changes</h1>
+
+    <div class="img-comp-container">
+      <div class="img-comp-img">
+        <img src="https://arahmandc.github.io/img/blogs/post/landing.png" width="700" height="400">
+      </div>
+      <div class="img-comp-img img-comp-overlay">
+        <img src="https://miro.medium.com/max/5472/1*c4Ht-aT9SV--IMe4lQokww@2x.jpeg?fbclid=IwAR34Q1o4CgGhf9ciJ7xlhTdPQ1WahSCw_kDRDfzIBDzuv4uinzCHfz7TFKQ" width="700" height="400">
+      </div>
+    </div>
+
+</div> -->
+
+
+
+
+
+<!-- footer  -->
+
 <div style="height: 100px" align="center">
   <h5>All Data Collected By...</h5>
-  <!-- <a href="http://osm.org/" target="_blank"><img src="osm_logo.svg" width="" height="80px"/></a><a href="https://www.hotosm.org/" target="_blank"><img src="Hot_logo.svg" width="" height="80px"/></a>  -->
   <a href="http://boiledbhoot.org/" target="_blank"><img src="logo.svg" width="" height="80px"/></a> 
 </div>
-<div style="margin-top: 10px"  "margin-bottom: 20px" align="right">DashBoard Created by <a href="https://arahmandc.github.io/" target="_blank">Atikur Rahman</a></div>
-<!-- <div style="margin-top: 20px" align="center">Copyright © 2019 <a href="https://arahmandc.github.io/" target="_blank">Atikur Rahman</a></div> -->
+<div style="margin-top: 10px" "margin-right:20px" "margin-bottom: 20px" align="right">DashBoard Created by <a href="https://arahmandc.github.io/" target="_blank">Atikur Rahman</a> & <a href="https://www.facebook.com/arefin.legacy/" target="_blank">Samsul Arafin</a></div>
+
+
+<!-- java script -->
 
 
 
 <script type="text/javascript">
 
-/*
-* Script to display two tables from Google Sheets as point and polygon layers using Leaflet
-* Starts by importing JSONs representing the data to provide faster loading (and in case Google changes their API)
-* The Sheets are then imported using Tabletop.js and overwrite the initially laded layers
-*/
-
-// The two getJSON calls load the localy stored JSONs and call the appropriate functions
-// $.getJSON("/leaflet-gsheets/data-sources/US-states-leaflet.json", function(json) {
-//     addPolygons(json);
-// });
-
-// $.getJSON("/leaflet-gsheets/data-sources/US-points.json", function(json) {
-//     addPoints(json);
-// });
-
-// init() is called as soon as the page loads
 function init() {
 
     // these URLs come from Google Sheets "shareable link" form
@@ -453,7 +648,11 @@ function getColor(type) {
     }
 }
 </script>
-
+<script>
+/*Execute a function that will execute an image compare function for each element with the img-comp-overlay class:*/
+initComparisons();
+</script>
 
 </body>
 </html>
+
