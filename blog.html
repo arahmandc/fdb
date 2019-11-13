@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <title>DashBoard</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin="">
+    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==" crossorigin=""></script>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css">
+    <link rel="stylesheet" href="https://rawgit.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+     <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+
+    <!--  <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/blueimp-gallery.min.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
+ -->
+    <!-- Custom Fonts-->
+    <!-- <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css"> -->
+
+
+      <meta charset="utf-8">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+  <script src="https://d3js.org/d3.v3.min.js"></script>
+  <script src="https://d3js.org/topojson.v1.min.js"></script>
+  <script src="https://d3js.org/d3-tile.v0.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/leaflet.esri/1.0.4/esri-leaflet.js"></script>
+
+
+
+<style>
+@font-face {
+    font-family: "Arial MT Std";
+    src: url(https://gfw2-data.s3.amazonaws.com/fires/d3/Dashboard/ArialMTStd-LightCond.otf) format("opentype");
+    font-weight: normal;
+}
+@font-face {
+    font-family: "Arial MT Std";
+    src: url(https://gfw2-data.s3.amazonaws.com/fires/d3/Dashboard/ArialMTStd-BoldCond.otf) format("opentype");
+    font-weight: bold;
+}
+body {
+  font-family: "Arial MT Std", Helvetica, sans-serif, Arial;
+  position: relative;
+}
+h1{
+  color: #424242;
+  font-size: 18px;
+  margin: 5px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+h2{
+  color: #424242;
+  font-size: 16px;
+  margin: 0px;
+  text-align: center;
+  font-weight: bolder;
+}
+h3{
+  display: block;
+  font-size: 16px;
+  margin: 15px;
+  font-weight: normal;
+}
+h4{
+  display: block;
+  margin: 0px;
+  text-align: center;
+  font-weight: normal;
+  font-size: 14px;
+}
+
+.background {
+  fill: none;
+  pointer-events: all;
+}
+.mesh {
+  fill: none;
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: darkgray;
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.axis text {
+  font-size: 11px;
+}
+#info{
+  /*z-index: 1;*/
+/*  position:relative;*/
+/*  width:200px;*/
+  text-align-last: center;
+  height:80px;
+  padding:10px;
+  background-color:transparent;
+  border-radius:10px;
+  margin-left: 10px;
+  /*box-shadow: 4px 4px 10px rgba(0,0,0,0.1);*/
+}
+#info2 {
+  z-index: 1;
+/*   position:relative;*/
+/*  width: 100px;*/
+  overflow: hidden;
+  float: left;
+}
+#info2 h2 {
+  font-size: 24px;
+  text-align: right;
+  margin-top: 5px;
+}
+
+#info3 {
+  width: 110px;
+  overflow: hidden;
+}
+#info3 h2 {
+}
+#info.hidden{
+  display:none;
+}
+#info p{
+  margin:0px;
+  font-size:12px;
+}
+
+#chartDiv rect{
+  fill:#D68178;
+}
+#chartDiv rect.selected{
+  fill:darkred;
+}
+#chartDiv svg {
+}
+
+#barChart, #pieDiv1, #pieDiv2 {
+}
+
+#map {
+  width: 700px;
+  height: 600px;
+  border: 1px dashed darkgray;
+}
+
+#pieDiv1 path {
+  stroke: #fff;
+}
+#pieDiv1 text {
+  font-size: 10px;
+  fill:white;
+}
+#pieDiv2 path {
+  stroke: #fff;
+}
+#pieDiv2 text {
+  font-size: 10px;
+  fill:white;
+}
+#barChart text {
+  font-size: 10px;
+  fill:black;
+}
+#dashboard{
+  overflow: hidden;
+  margin: auto;
+  width: 1010px;
+}
+#left{
+  width: 700px;
+  float: left;
+}
+#right{
+  overflow: hidden;
+  width: 300px;
+}
+#right svg {
+  display: block;
+  margin: auto;
+}
+    
+    
+#customers {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 4px;
+}
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+/*#customers tr:hover {background-color: #ddd;}*/
+#customers th {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  text-align: center;
+  background-color: #2ca25f;
+  color: white;
+}
+
+  </style>
+
+<style>
+* {box-sizing: border-box;}
+
+.img-comp-container {
+  position: relative;
+  align-items: center;
+  height: 200px; /*should be the same height as the images*/
+}
+
+.img-comp-img {
+  position: absolute;
+  width: auto;
+  height: auto;
+  overflow:hidden;
+}
+
+.img-comp-img img {
+  display:block;
+  vertical-align:middle;
+}
+
+.img-comp-slider {
+  position: absolute;
+  z-index:9;
+  cursor: ew-resize;
+  /*set the appearance of the slider:*/
+  width: 40px;
+  height: 40px;
+  background-color: #2196F3;
+  opacity: 0.7;
+  border-radius: 50%;
+}
+</style>
+
+<style>
+divv {
+  padding: 5px;
+}
+
+.img1 {
+  float: right;
+}
+
+.clearfix {
+  overflow: auto;
+}
+
+.img2 {
+  float: left;
+  padding-right: 5px;
+}
+</style>
+
+<script>
+function initComparisons() {
+  var x, i;
+  /*find all elements with an "overlay" class:*/
+  x = document.getElementsByClassName("img-comp-overlay");
+  for (i = 0; i < x.length; i++) {
+    /*once for each "overlay" element:
+    pass the "overlay" element as a parameter when executing the compareImages function:*/
+    compareImages(x[i]);
+  }
+  function compareImages(img) {
+    var slider, img, clicked = 0, w, h;
+    /*get the width and height of the img element*/
+    w = img.offsetWidth;
+    h = img.offsetHeight;
+    /*set the width of the img element to 50%:*/
+    img.style.width = (w / 2) + "px";
+    /*create slider:*/
+    slider = document.createElement("DIV");
+    slider.setAttribute("class", "img-comp-slider");
+    /*insert slider*/
+    img.parentElement.insertBefore(slider, img);
+    /*position the slider in the middle:*/
+    slider.style.top = (h / 2) - (slider.offsetHeight / 2) + "px";
+    slider.style.left = (w / 2) - (slider.offsetWidth / 2) + "px";
+    /*execute a function when the mouse button is pressed:*/
+    slider.addEventListener("mousedown", slideReady);
+    /*and another function when the mouse button is released:*/
+    window.addEventListener("mouseup", slideFinish);
+    /*or touched (for touch screens:*/
+    slider.addEventListener("touchstart", slideReady);
+    /*and released (for touch screens:*/
+    window.addEventListener("touchstop", slideFinish);
+    function slideReady(e) {
+      /*prevent any other actions that may occur when moving over the image:*/
+      e.preventDefault();
+      /*the slider is now clicked and ready to move:*/
+      clicked = 1;
+      /*execute a function when the slider is moved:*/
+      window.addEventListener("mousemove", slideMove);
+      window.addEventListener("touchmove", slideMove);
+    }
+    function slideFinish() {
+      /*the slider is no longer clicked:*/
+      clicked = 0;
+    }
+    function slideMove(e) {
+      var pos;
+      /*if the slider is no longer clicked, exit this function:*/
+      if (clicked == 0) return false;
+      /*get the cursor's x position:*/
+      pos = getCursorPos(e)
+      /*prevent the slider from being positioned outside the image:*/
+      if (pos < 0) pos = 0;
+      if (pos > w) pos = w;
+      /*execute a function that will resize the overlay image according to the cursor:*/
+      slide(pos);
+    }
+    function getCursorPos(e) {
+      var a, x = 0;
+      e = e || window.event;
+      /*get the x positions of the image:*/
+      a = img.getBoundingClientRect();
+      /*calculate the cursor's x coordinate, relative to the image:*/
+      x = e.pageX - a.left;
+      /*consider any page scrolling:*/
+      x = x - window.pageXOffset;
+      return x;
+    }
+    function slide(x) {
+      /*resize the image:*/
+      img.style.width = x + "px";
+      /*position the slider:*/
+      slider.style.left = img.offsetWidth - (slider.offsetWidth / 2) + "px";
+    }
+  }
+}
+</script>
+
+
+
+</head>
+<body>
+
+  <div style="margin-top: 20px"><h1></h1></div>
+<div style=""><h2 style="color: #fff">Blog</h2></div>
+<!-- Navigation -->
+    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand page-scroll" href="index.html">
+                    <h1 style="text-align: center;">Health Facilities Field data Collection</h1>
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+                <ul class="nav navbar-nav">
+                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="index.html">DashBoard</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="collector.html">Collector Board</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="map.html">Map</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="blog.html">Blog</a>
+                    </li>
+<!--                     <li>
+                        <a class="page-scroll" href="#contact">Contact</a>
+                    </li> -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+<hr>
+
+
+
+<div id="dashboard">
+  <div id="left">
+      <br>
+  <h3>Field Data Collection</h3>
+  Bangladesh Humanitarian OpenStreetMap Operational Team (BHOOT) is the core community group of OpenStreetMap Bangladesh. Contributing field level data is a regular basis work of BHOOT by which we produce not only quality data we made mappers to create a better world. For the initiated the project of Humanitarian Map data mappers of Bangladesh Humanitarian OpenStreetMap Operational Team (BHOOT) keep their footprints all  places of Mohammadpur and Adabor area to make a difference on the OpenStreetMap.
+  <img src="images/field_photo.png" height="400" width="700">
+  Some snaps of collecting field data from Mohammadpur and Adabor area
+  <br>
+  <br>
+  <br>
+
+  <h3>Mapathon For Heath Facilities</h3>
+  Bangladesh Humanitarian OpenStreetMap Operational Team (BHOOT) have arranged a Mapathon for the project of “Make Health Facilities Easear for All” to trace out the health facilities of Dhaka.Most of the contributors of Bangladesh Humanitarian OpenStreetMap Operational Team (BHOOT) have joined in Mapathon. It is a joyous moment of the team to celebrate their mapping party. In the Mapathon various tags of health facilities are discussed among the team members to ensure proper key and value of OSM data.Some moments have captured during the event.
+  <img src="images/mapathon.png" height="400" width="700">
+  <br>
+  <br>
+  <br>
+</div>
+</div>
+
+
+
+<!-- footer  -->
+
+<div style="height: 100px" align="center">
+  <h5>All Data Collected By...</h5>
+  <a href="https://www.facebook.com/groups/ask.bhoot/" target="_blank"><img src="images/logo.png" width="" height="80px"/></a> 
+</div>
+
+Creator Name
+<div style="margin-top: 10px" "margin-right:20px" "margin-bottom: 20px" align="right">DashBoard Created by <a href="https://arahmandc.github.io/" target="_blank">Atikur Rahman</a> & <a href="https://www.facebook.com/arefin.legacy/" target="_blank">Samsul Arafin</a></div>
+
+
+<!-- java script -->
+
+
+</body>
+</html>
